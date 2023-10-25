@@ -1,8 +1,8 @@
 import requests
 import base64
 
-client_id = 'd6caaa509afd447d8344c155bc310e55'
-client_secret = '9174d1a1214f438dada61c1b7d7cb1bd'
+client_id = ''
+client_secret = ''
 
 # Encode the client ID and client secret to create the Basic Auth header
 auth_header = 'Basic ' + base64.b64encode(f"{client_id}:{client_secret}".encode()).decode()
