@@ -1,13 +1,19 @@
 import requests
 import base64
 import time
+import webbrowser
+import secrets
 
 from constants import Constant
+
+#TODO set when read to true
+verify_requests = False
 
 constant = Constant()
 
 client_id = constant.spotify["CLIENT_ID"]
 client_secret = constant.spotify["CLIENT_SECRET"]
+redirect_uri = constant.spotify["REDIRECT_URI"]
 
 # Cache for storing the access token and its creation time
 access_token_cache = {
@@ -35,8 +41,7 @@ def get_spotify_access_token(client_id, client_secret):
         'Authorization': auth_header
     }
 
-    # TODO auf True setzen 
-    response = requests.post('https://accounts.spotify.com/api/token', data=payload, headers=headers, verify=False)
+    response = requests.post('https://accounts.spotify.com/api/token', data=payload, headers=headers, verify=verify_requests)
 
     if response.status_code == 200:
         data = response.json()
@@ -52,6 +57,21 @@ def get_spotify_access_token(client_id, client_secret):
         print(response.text)
         return None
 
+def get_spotify_authorization_code(client_id, redirect_uri):
+    scope = 'user-read-private user-read-email'
+    state = secrets.token_urlsafe(16)  # Optional, but recommended for security
+
+    # Construct the authorization URL
+    auth_url = 'https://accounts.spotify.com/authorize?' + \
+        f'client_id={client_id}&' + \
+        f'response_type=code&' + \
+        f'redirect_uri={redirect_uri}&' + \
+        f'scope={scope}&' + \
+        f'state={state}'
+        
+    # Open the authorization URL in a web browser for the user to grant permission
+    webbrowser.open(auth_url)
+
 def get_spotify_play_state(access_token):
     # Define the Spotify API endpoint
     url = "https://api.spotify.com/v1/me/player"
@@ -63,7 +83,7 @@ def get_spotify_play_state(access_token):
 
     try:
         # Make the GET request
-        response = requests.get(url, headers=headers, verify=False)
+        response = requests.get(url, headers=headers, verify=verify_requests)
 
         # Check if the response status code is 200 (OK)
         if response.status_code == 200:
@@ -79,7 +99,4 @@ def get_spotify_play_state(access_token):
         print(f"Error: {e}")
         return None
     
-get_spotify_access_token(client_id, client_secret)
-print (access_token_cache["token"])
-is_playing = get_spotify_play_state(access_token_cache["token"])
-print (is_playing)
+get_spotify_authorization_code(client_id, redirect_uri)
