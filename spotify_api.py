@@ -18,7 +18,6 @@ client_id = constant.spotify["CLIENT_ID"]
 client_secret = constant.spotify["CLIENT_SECRET"]
 redirect_uri = constant.spotify["REDIRECT_URI"]
 authorization_code = constant.spotify["AUTHORIZATION_CODE"]
-refresh_token = constant.spotify["REFRESH_TOKEN"]
 
 # Cache for storing the access token and its creation time
 access_token_cache = {
@@ -184,6 +183,9 @@ def refresh_spotify_access_token(client_id, client_secret, refresh_token):
         with open('resource.yaml', 'w') as file:
             yaml.dump(data, file)
 
+        access_token_cache['access_token'] = new_access_token
+        access_token_cache['expires_at'] = new_expires_at
+
     else:
         print(f'Error: {response.status_code}')
         print(response.text)
@@ -193,5 +195,5 @@ def print_accesstoken():
 
 print_accesstoken()
 if(access_token_cache['expires_at'] <= datetime.now()):
-        refresh_spotify_access_token(client_id, client_secret, refresh_token)
+        refresh_spotify_access_token(client_id, client_secret, access_token_cache['refresh_token'])
 print_accesstoken()
