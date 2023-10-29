@@ -9,7 +9,17 @@ from datetime import datetime, timedelta
 
 from constants import Constant
 
-#TODO set when read to true
+# Worklflow of the Tokens
+# When a new scope is needed you can add it to the request_scope variable
+# run port8888.py to listen to the redirect uri
+# Run _private_get_spotify_authorization_code: A browser window will open and the user has to give permission to the scopes
+# You will be redirected to the redirect_uri where the authorization code is displayed
+# Replace the code in the resource.yaml file and run _private_get_personal_spotify_access_token
+# The Access Token, Replicate Token and the new expiration time will be printed
+# Replace them in the resource.yaml
+# When needed (One hour after the creation of the Access Token), run refresh_spotify_access_token, variables in the yaml will be replaced
+
+#TODO set when ready to true
 verify_requests = False
 
 constant = Constant()
@@ -26,7 +36,9 @@ access_token_cache = {
     "expires_at": constant.spotify["EXPIRES_AT"]
 }
 
-def get_spotify_access_token(client_id, client_secret):
+request_scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing app-remote-control'
+
+def _private_get_spotify_access_token(client_id, client_secret):
     current_time = int(time.time())
     
     # Check if the token is cached and not older than 50 minutes
@@ -62,8 +74,8 @@ def get_spotify_access_token(client_id, client_secret):
         print(response.text)
         return None
 
-def get_spotify_authorization_code(client_id, redirect_uri):
-    scope = 'user-read-private user-read-email'
+def _private_get_spotify_authorization_code(client_id, redirect_uri):
+    scope = request_scope
     state = secrets.token_urlsafe(16)  # Optional, but recommended for security
 
     # Construct the authorization URL
@@ -76,35 +88,8 @@ def get_spotify_authorization_code(client_id, redirect_uri):
         
     # Open the authorization URL in a web browser for the user to grant permission
     webbrowser.open(auth_url)
-
-def get_spotify_play_state(access_token):
-    # Define the Spotify API endpoint
-    url = "https://api.spotify.com/v1/me/player"
-
-    # Define the headers with the authorization token
-    headers = {
-        "Authorization": f"Bearer {access_token}"
-    }
-
-    try:
-        # Make the GET request
-        response = requests.get(url, headers=headers, verify=verify_requests)
-
-        # Check if the response status code is 200 (OK)
-        if response.status_code == 200:
-            # Parse the JSON response
-            data = response.json()
-            # Extract the 'is_playing' value
-            is_playing = data.get("is_playing", False)
-            return is_playing
-        else:
-            print(f"Failed to retrieve Spotify play state. Status code: {response.status_code}")
-            return None
-    except Exception as e:
-        print(f"Error: {e}")
-        return None
     
-def get_personal_spotify_access_token(client_id, client_secret, authorization_code, redirect_uri):
+def _private_get_personal_spotify_access_token(client_id, client_secret, authorization_code, redirect_uri):
     # Encode the client ID and client secret in Base64 format for the Authorization header
     base64_credentials = base64.b64encode(f"{client_id}:{client_secret}".encode('utf-8')).decode('utf-8')
 
@@ -132,17 +117,18 @@ def get_personal_spotify_access_token(client_id, client_secret, authorization_co
         # Access the access token and other information
         access_token = token_info['access_token']
         refresh_token = token_info['refresh_token']
+        current_time = datetime.now()
         expires_in = token_info['expires_in']
+        expires_at = current_time + timedelta(seconds=expires_in)
 
-        # Update the cache with the new token and its creation time
-        access_token_cache["access_token"] = access_token
-        access_token_cache["refresh_token"] = refresh_token
-        access_token_cache["expires_at"] = expires_in
+        print("Access Token: ", access_token)
+        print("Refresh Token ", refresh_token)
+        print("Expires_at ", expires_at)
     else:
         print(f'Error: {response.status_code}')
         print(response.text)
 
-def refresh_spotify_access_token(client_id, client_secret, refresh_token):
+def _private_refresh_spotify_access_token(client_id, client_secret, refresh_token):
     # Define the token request parameters
     token_url = 'https://accounts.spotify.com/api/token'
     token_data = {
@@ -190,10 +176,9 @@ def refresh_spotify_access_token(client_id, client_secret, refresh_token):
         print(f'Error: {response.status_code}')
         print(response.text)
 
-def print_accesstoken():
+def _private_print_accesstoken():
     print('Access Token: ', access_token_cache['access_token'], ' Refresh Token: ', access_token_cache['refresh_token'], 'Expires at: ', access_token_cache['expires_at'])
 
-print_accesstoken()
-if(access_token_cache['expires_at'] <= datetime.now()):
-        refresh_spotify_access_token(client_id, client_secret, access_token_cache['refresh_token'])
-print_accesstoken()
+def is_access_token_still_viable():
+    if(access_token_cache['expires_at'] <= datetime.now()):
+        _private_refresh_spotify_access_token(client_id, client_secret, access_token_cache['refresh_token'])

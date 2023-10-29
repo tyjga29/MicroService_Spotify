@@ -1,0 +1,9 @@
+spotify_api_access_data:
+  ACCESS_TOKEN: Personal Access Token from the API
+  AUTHORIZATION_CODE: Personal Authorization Code from the API
+  CLIENT_ID: Client Id
+  CLIENT_SECRET: client Secret
+  EXPIRES_AT: Expiration date of the Access Token
+  REDIRECT_URI: Redirect Uri, edited  on the dashboard
+  REFRESH_TOKEN: refresh Token to generate new Access Token
+  STATE: State number of the requests
