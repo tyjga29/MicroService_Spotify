@@ -18,6 +18,8 @@ class Spotify_Metadata:
     @classmethod
     def set_device_info(cls):
         data = get_spotify_player_info(access_token)
+        if data == False:
+            return
         device_info = data.get("device")
         cls.device_info["id"] = device_info.get("id")
         cls.device_info["name"] = device_info.get("name")

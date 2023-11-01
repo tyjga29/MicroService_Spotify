@@ -17,6 +17,9 @@ def get_spotify_player_info(access_token):
         # The request was successful, and you can access the response content
         data = response.json()
         return data
+    elif response.status_code == 204:
+        # Request was succesful nothing is playing
+        return False
     else:
         error_response(response)
         
