@@ -1,37 +1,44 @@
 from spotify_tokens_api import get_viable_access_token
 from spotify_api_requests import *
 
-access_token = None
-
 class Spotify_Metadata:
-    is_playing = None
-    device_info = {
-        "id": None,
-        "name": None
-    }
+    instance = None
 
-    @classmethod
-    def set_is_playing(cls):
-        data = get_spotify_player_info(access_token)
-        cls.is_playing = data.get("is_playing")
+    def __new__(cls):
+        if cls.instance is None:
+            cls._instance = super(Spotify_Metadata, cls).__new__(cls)
+            cls._instance.initialize()
+        return cls._instance
+    
+    def initialize(self):
+        self.access_token = None
+        self.is_playing = None
+        self.device_info = {
+            "id": None,
+            "name": None
+        }
 
-    @classmethod
-    def set_device_info(cls):
-        data = get_spotify_player_info(access_token)
+    def set_access_token(self):
+        self.access_token = get_viable_access_token()
+    
+    def set_is_playing(self):
+        data = get_spotify_player_info(self.access_token)
+        self.is_playing = data.get("is_playing")
+
+    def set_device_info(self):
+        data = get_spotify_player_info(self.access_token) 
         if data == False:
             return
         device_info = data.get("device")
-        cls.device_info["id"] = device_info.get("id")
-        cls.device_info["name"] = device_info.get("name")
+        self.device_info["id"] = device_info.get("id")
+        self.device_info["name"] = device_info.get("name")
 
-    def update_spotify_metadata():
-        Spotify_Metadata.set_is_playing()
-        Spotify_Metadata.set_device_info()
+    def update_spotify_metadata(self):
+        Spotify_Metadata.set_is_playing(self)
+        Spotify_Metadata.set_device_info(self)
 
-access_token = get_viable_access_token()
-print(access_token)
-metadata = Spotify_Metadata
-metadata.update_spotify_metadata()
-print(metadata.is_playing)
-print(metadata.device_info)
-    
+    def print_instance(self):
+        print("Is Playing:", self.is_playing)
+        print("Device Info:", self.device_info)
+ 
+spotify_metadata = Spotify_Metadata()
