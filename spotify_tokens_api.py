@@ -182,5 +182,5 @@ def _private_print_accesstoken():
 
 def get_viable_access_token():
     if(access_token_cache['expires_at'] <= datetime.now()):
-        access_token = _private_refresh_spotify_access_token(client_id, client_secret, access_token_cache['refresh_token'])
-        return access_token
+        access_token_cache['access_token'] = _private_refresh_spotify_access_token(client_id, client_secret, access_token_cache['refresh_token'])
+    return access_token_cache['access_token']
