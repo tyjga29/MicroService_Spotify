@@ -42,10 +42,16 @@ def play_music(access_token, playlist_uri, position=5, position_ms=0):
 
     response = requests.put(url, headers=headers, json=data)
     
+    # Success
     if response.status_code == 401:
         refresh_spotify_token_manually()
         play_music(get_access_token, playlist_uri)
-    elif response.status_code != 204:
+
+    # No Active Device
+    elif response.status_code == 404:
+        return
+            
+    else:
         error_response(response)
         
     
