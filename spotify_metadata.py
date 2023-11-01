@@ -1,4 +1,4 @@
-from spotify_tokens_api import get_viable_access_token
+from spotify_tokens_api import get_access_token, check_access_token
 from spotify_api_requests import *
 
 class Spotify_Metadata:
@@ -19,7 +19,7 @@ class Spotify_Metadata:
         }
 
     def set_access_token(self):
-        self.access_token = get_viable_access_token()
+        self.access_token = get_access_token()
     
     def set_is_playing(self):
         data = get_spotify_player_info(self.access_token)
@@ -41,4 +41,7 @@ class Spotify_Metadata:
         print("Is Playing:", self.is_playing)
         print("Device Info:", self.device_info)
  
-spotify_metadata = Spotify_Metadata()
+#spotify_metadata = Spotify_Metadata()
+#check_access_token()
+#spotify_metadata.set_access_token()
+#spotify_metadata.update_spotify_metadata()

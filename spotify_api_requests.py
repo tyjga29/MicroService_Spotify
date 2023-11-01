@@ -1,4 +1,5 @@
 import requests
+from spotify_tokens_api import refresh_spotify_token_manually, get_access_token
 
 def error_response(response):
     print(f"Error: {response.status_code}")
@@ -21,6 +22,30 @@ def get_spotify_player_info(access_token):
         # Request was succesful nothing is playing
         return False
     else:
+        error_response(response)
+
+def play_music(access_token, playlist_uri, position=5, position_ms=0):
+    url = "https://api.spotify.com/v1/me/player/play"
+
+    headers = {
+        "Authorization": f"Bearer {access_token}",
+        "Content-Type": "application/json"
+    }
+
+    data = {
+        "context_uri": playlist_uri,
+        "offset": {
+            "position": position
+        },
+        "position_ms": position_ms
+    }
+
+    response = requests.put(url, headers=headers, json=data)
+    
+    if response.status_code == 401:
+        refresh_spotify_token_manually()
+        play_music(get_access_token, playlist_uri)
+    elif response.status_code != 204:
         error_response(response)
         
     

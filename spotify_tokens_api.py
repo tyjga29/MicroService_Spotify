@@ -156,7 +156,8 @@ def _private_refresh_spotify_access_token(client_id, client_secret, refresh_toke
         new_access_token = token_info['access_token']
         current_time = datetime.now()
         expires_in = token_info['expires_in']
-        new_expires_at = current_time + timedelta(seconds=expires_in)
+        # Subtract time to make sure the token is always viable
+        new_expires_at = current_time + timedelta(seconds=expires_in-150)
 
         #Overwrite the yaml file with the new variables
         # Load the existing YAML data from the file
@@ -180,7 +181,12 @@ def _private_refresh_spotify_access_token(client_id, client_secret, refresh_toke
 def _private_print_accesstoken():
     print('Access Token: ', access_token_cache['access_token'], ' Refresh Token: ', access_token_cache['refresh_token'], 'Expires at: ', access_token_cache['expires_at'])
 
-def get_viable_access_token():
+def refresh_spotify_token_manually():
+    _private_refresh_spotify_access_token(client_id, client_secret, access_token_cache['refresh_token'])
+
+def check_access_token():
     if(access_token_cache['expires_at'] <= datetime.now()):
         access_token_cache['access_token'] = _private_refresh_spotify_access_token(client_id, client_secret, access_token_cache['refresh_token'])
+
+def get_access_token():
     return access_token_cache['access_token']

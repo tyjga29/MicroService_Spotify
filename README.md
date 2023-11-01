@@ -5,3 +5,4 @@ Needed libraries:
     requests
     pybase64
     pyyaml
+    schedule
