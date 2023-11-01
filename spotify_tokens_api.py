@@ -171,6 +171,7 @@ def _private_refresh_spotify_access_token(client_id, client_secret, refresh_toke
 
         access_token_cache['access_token'] = new_access_token
         access_token_cache['expires_at'] = new_expires_at
+        return new_access_token
 
     else:
         print(f'Error: {response.status_code}')
@@ -179,6 +180,7 @@ def _private_refresh_spotify_access_token(client_id, client_secret, refresh_toke
 def _private_print_accesstoken():
     print('Access Token: ', access_token_cache['access_token'], ' Refresh Token: ', access_token_cache['refresh_token'], 'Expires at: ', access_token_cache['expires_at'])
 
-def is_access_token_still_viable():
+def get_viable_access_token():
     if(access_token_cache['expires_at'] <= datetime.now()):
-        _private_refresh_spotify_access_token(client_id, client_secret, access_token_cache['refresh_token'])
+        access_token = _private_refresh_spotify_access_token(client_id, client_secret, access_token_cache['refresh_token'])
+        return access_token
