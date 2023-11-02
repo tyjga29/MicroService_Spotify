@@ -4,10 +4,11 @@ import time
 import webbrowser
 import secrets
 import yaml
+import os
 
 from datetime import datetime, timedelta
 
-from resources.constants import Constant
+from resources_package.constants import Constant
 
 # Worklflow of the Tokens
 # When a new scope is needed you can add it to the request_scope variable
@@ -35,6 +36,9 @@ access_token_cache = {
     "refresh_token": constant.spotify["REFRESH_TOKEN"],
     "expires_at": constant.spotify["EXPIRES_AT"]
 }
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+resources_package_yaml_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../resources_package/resource.yaml'))
 
 request_scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing app-remote-control'
 
@@ -161,13 +165,13 @@ def _private_refresh_spotify_access_token(client_id, client_secret, refresh_toke
 
         #Overwrite the yaml file with the new variables
         # Load the existing YAML data from the file
-        with open('resource.yaml', 'r') as file:
+        with open(resources_package_yaml_path, 'r') as file:
             data = yaml.load(file, Loader=yaml.FullLoader)
 
         data['spotify_api_access_data']['ACCESS_TOKEN'] = new_access_token
         data['spotify_api_access_data']['EXPIRES_AT'] = new_expires_at
 
-        with open('resource.yaml', 'w') as file:
+        with open('../../resource.yaml', 'w') as file:
             yaml.dump(data, file)
 
         access_token_cache['access_token'] = new_access_token

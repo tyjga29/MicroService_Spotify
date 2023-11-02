@@ -1,5 +1,5 @@
 import requests
-from spotify_package.spotify_api.spotify_tokens_api import refresh_spotify_token_manually, get_access_token
+from spotify_package.spotify_api_package.spotify_tokens_api import refresh_spotify_token_manually, get_access_token
 
 def error_response(response):
     print(f"Error: {response.status_code}")
