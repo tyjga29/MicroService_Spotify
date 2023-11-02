@@ -7,7 +7,7 @@ import yaml
 
 from datetime import datetime, timedelta
 
-from constants import Constant
+from resources.constants import Constant
 
 # Worklflow of the Tokens
 # When a new scope is needed you can add it to the request_scope variable

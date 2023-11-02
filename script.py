@@ -1,0 +1,3 @@
+from spotify_package.spotify_controller import spotify_play_music
+
+spotify_play_music("spotify:playlist:37i9dQZF1DX6J5NfMJS675")

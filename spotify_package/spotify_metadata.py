@@ -1,5 +1,5 @@
-from spotify_tokens_api import get_access_token, check_access_token
-from spotify_api_requests import *
+from spotify_package.spotify_api.spotify_tokens_api import get_access_token, check_access_token
+from spotify_package.spotify_api.spotify_api_requests import *
 
 class Spotify_Metadata:
     instance = None
