@@ -4,7 +4,7 @@ from spotify_package.spotify_api_package.spotify_tokens_api import refresh_spoti
 def error_response(response):
     print(f"Error: {response.status_code}")
     print(response.text)
-    return None  # Handle the error as needed
+    return None
 
 def get_spotify_player_info(access_token):
     url = "https://api.spotify.com/v1/me/player"
