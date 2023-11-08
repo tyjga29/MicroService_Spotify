@@ -1,3 +1,17 @@
-from spotify_package.spotify_controller import spotify_play_music
+import json
 
-spotify_play_music("spotify:playlist:37i9dQZF1DX6J5NfMJS675")
+from spotify_package.spotify_controller import spotify_play_music
+from mqtt_subscriber import MQTTSubscriber
+
+if __name__ == "__main__":
+    # Create an instance of the MQTTSubscriber class
+    subscriber = MQTTSubscriber()
+
+    subscriber.subscribe()
+
+    try:
+        while True:
+            # You can perform other tasks here while the client is subscribed
+            pass
+    except KeyboardInterrupt:
+        subscriber.stop()
