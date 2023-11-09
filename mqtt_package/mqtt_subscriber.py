@@ -1,10 +1,19 @@
 import paho.mqtt.client as mqtt
 import json
+import yaml
+import os
+
 from spotify_package.spotify_controller import use_events_for_music
 
-broker_address = "localhost"
-broker_port = 1883
-topic = "calendarEvents"
+dir_path = os.path.dirname(os.path.realpath(__file__))
+yaml_path = os.path.join(dir_path, 'mqtt_resources.yaml')
+with open(yaml_path, 'r') as f:
+    data = yaml.safe_load(f)
+    mqtt_data = data["mqtt_resources"]
+
+broker_address = mqtt_data["BROKER_ADDRESS"]
+broker_port = mqtt_data["BROKER_PORT"]
+topic = mqtt_data["TOPIC"]
 
 class MQTTSubscriber:
     def __init__(self):

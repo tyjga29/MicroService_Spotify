@@ -1,7 +1,5 @@
-import json
-
 from spotify_package.spotify_controller import spotify_play_music
-from mqtt_subscriber import MQTTSubscriber
+from mqtt_package.mqtt_subscriber import MQTTSubscriber
 
 if __name__ == "__main__":
     # Create an instance of the MQTTSubscriber class
