@@ -39,3 +39,7 @@ def use_events_for_music(events):
 
                 print(f"Performing action for the '{event_summary}' event")
                 spotify_choose_uri(event_summary)
+
+
+if __name__ == "__main":
+    spotify_play_music("spotify:playlist:37i9dQZF1DX6J5NfMJS675")
