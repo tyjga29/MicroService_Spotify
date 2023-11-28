@@ -12,10 +12,13 @@ def spotify_play_music(spotify_uri):
 
 def spotify_choose_uri(event_summary):
     if(event_summary == 'Gym'):
+        print('Playing Gym-Playlist')
         spotify_play_music("spotify:playlist:37i9dQZF1DX6J5NfMJS675")
     elif(event_summary == 'Studying'):
+        print('Playing Studying-Playlist')
         spotify_play_music("spotify:playlist:1YIe34rcmLjCYpY9wJoM2p?si=147c2c7749764851")
     elif(event_summary == 'Yoga'):
+        print('Playing Yoga-Plalist')
         spotify_play_music("spotify:playlist:37i9dQZF1DX9uKNf5jGX6m")
     else:
         print("Activity needs to be added")
