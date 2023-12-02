@@ -20,6 +20,7 @@ class MQTTSubscriber:
         self.broker_address = broker_address
         self.broker_port = broker_port
         self.client = mqtt.Client()
+        self.client.username_pw_set("pda_user", "pda_password")
         self.events = []
 
         # Set up the callback functions

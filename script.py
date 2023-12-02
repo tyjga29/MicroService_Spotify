@@ -4,7 +4,7 @@ from mqtt_package.mqtt_subscriber import MQTTSubscriber
 if __name__ == "__main__":
     # Create an instance of the MQTTSubscriber class
     subscriber = MQTTSubscriber()
-
+    print("test")
     subscriber.subscribe()
 
     try:
