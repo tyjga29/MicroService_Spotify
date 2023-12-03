@@ -11,6 +11,7 @@ def spotify_play_music(spotify_uri):
     play_music(access_token, spotify_uri)
 
 def spotify_choose_uri(event_summary):
+    event_summary = event_summary.replace('"', "")
     if(event_summary == 'Gym'):
         print('Playing Gym-Playlist')
         spotify_play_music("spotify:playlist:37i9dQZF1DX6J5NfMJS675")
