@@ -1,3 +1,4 @@
+import threading
 from datetime import datetime, timezone
 import time
 
@@ -32,17 +33,20 @@ def use_events_for_music(events):
 
         if event_start_time_str:
             # Convert the event's start time to a datetime object
-            event_start_time = datetime.fromisoformat(event_start_time_str)
+            event_start_time = datetime.fromisoformat(event_start_time_str[:-1] + "+00:00")
 
             # Calculate the time until the event starts
-            time_until_event = (event_start_time - datetime.now(timezone.utc)).total_seconds()
+            now = datetime.now(timezone.utc)
+            test = (event_start_time - now)
+            time_until_event = test.total_seconds()
 
             if time_until_event > 0:
-                print(f"Waiting for the '{event_summary}' event at {event_start_time}")
-                time.sleep(time_until_event)  # Wait until the event time
+                threading.Timer(time_until_event, spotify_choose_uri, [event_summary]).start()
+                #print(f"Waiting for the '{event_summary}' event at {event_start_time}")
+                #time.sleep(time_until_event)  # Wait until the event time
 
-                print(f"Performing action for the '{event_summary}' event")
-                spotify_choose_uri(event_summary)
+                #print(f"Performing action for the '{event_summary}' event")
+                #spotify_choose_uri(event_summary)
 
 
 if __name__ == "__main":
